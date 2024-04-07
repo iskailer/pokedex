@@ -1,9 +1,47 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pokémon API</title>
+<style>
+
+#pokemonList {
+  list-style-type: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+#pokemonList li {
+  width: 120px;
+  height: 200px;
+  border: 2px solid #001;
+  border-radius: 10px;
+  margin: 10px;
+  padding: 5px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#pokemonList li img {
+  width: 120px;
+  height: 120px;
+  margin-bottom: 10px;
+}
+
+#pokemonList li p {
+  margin: 0;
+  font-weight: 600;
+}
+
+</style>
+
+
 </head>
 <body>
   <h1>List of Pokémon</h1>
@@ -17,17 +55,39 @@
       return data;
     }
 
+const typeColors = {
+  grass: '#78c850',   // Grass
+  fire: '#f08030',    // Fire
+  water: '#6890f0',   // Water
+  bug: '#a8b820',     // Bug
+  normal: '#a8a878',  // Normal
+  fairy: '#ee99ac',   // Fairy
+  poison: '#a040a0',  // Poison
+  ground: '#e0c068',  // Ground
+  electric: '#f8d030',  // Electric
+  fighting: '#c03028',  // Fighting
+  psychic: '#f85888',   // Psychic
+  rock: '#b8a038',      // Rock
+  ghost: '#705898'      // Ghost
+};
+
     // Função para criar um item de lista para cada Pokémon
     async function createPokemonListItem(number) {
       const pokemonData = await fetchPokemonData(number);
       const listItem = document.createElement('li');
-      const pokemonName = pokemonData.name;
+      const pokemonName = pokemonData.name.charAt(0).toUpperCase() + pokemonData.name.slice(1); 
       const pokemonImage = pokemonData.sprites.front_default;
+      const pokemonType = pokemonData.types[0].type.name.toLowerCase(); ; 
+
 
       listItem.innerHTML = `
         <img src="${pokemonImage}" alt="${pokemonName}">
         <p>${pokemonName}</p>
       `;
+
+	listItem.classList.add('pokemon-card'); 
+  	listItem.style.backgroundColor = typeColors[pokemonType];
+
 
       return listItem;
     }
@@ -36,7 +96,7 @@
     async function populatePokemonList() {
       const pokemonListElement = document.getElementById('pokemonList');
 
-      for (let i = 1; i <= 100; i++) {
+      for (let i = 1; i <= 151; i++) {
         const listItem = await createPokemonListItem(i);
         pokemonListElement.appendChild(listItem);
       }
